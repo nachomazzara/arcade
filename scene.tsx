@@ -72,6 +72,14 @@ export default class RollerCoaster extends ScriptableScene<any> {
             material={{ src: src2, color: "white" }}
             rotation={{ x: 0, y: 10, z: 0 }}
           />
+
+          <gltf-model
+            src="assets/restart.gltf"
+            id="btn_retry"
+            position={{ x: 0, y: 0.3, z: 0.2 }}
+            scale={{ x: 0.2, y: 0.2, z: 0.2 }}
+          />
+
           <entity
             position={{ x: 0.9, y: 1, z: 0 }}
             rotation={{ x: 90, y: -25, z: 0 }}
@@ -105,13 +113,6 @@ export default class RollerCoaster extends ScriptableScene<any> {
               id="btn_up"
               position={{ x: 0, y: 0, z: -0.2 }}
               scale={{ x: 0.2, y: 0.2, z: 0.2 }}
-            />
-
-            <cylinder
-              id="btn_retry"
-              position={{ x: 0, y: 0, z: 0 }}
-              color="black"
-              scale={{ x: 0.1, y: 0.1, z: 0.1 }}
             />
           </entity>
         </entity>
