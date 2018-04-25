@@ -14,7 +14,7 @@ class Draw {
     this.drawSnake()
     this.createFood()
     this.paint = this.paint.bind(this)
-    this.gameloop = setInterval(this.paint, 60)
+    this.gameloop = setInterval(this.paint, 100)
   }
 
   setDirection(dir) {
@@ -59,12 +59,6 @@ class Draw {
     this.ctx.fillRect(x * this.snakeSize + 1, y * this.snakeSize + 1, this.snakeSize - 2, this.snakeSize - 2)
   }
 
-  scoreText() {
-    var score_text = 'Score: ' + this.score
-    this.ctx.fillStyle = 'blue'
-    this.ctx.fillText(score_text, 145, this.h - 5)
-  }
-
   drawSnake() {
     var length = 4
     this.snake = []
@@ -103,6 +97,11 @@ class Draw {
     ) {
       this.ctx.clearRect(0, 0, this.w, this.h)
       this.gameloop = clearInterval(this.gameloop)
+      this.ws.send(
+        JSON.stringify({
+          end: true
+        })
+      )
       return
     }
 
@@ -124,8 +123,13 @@ class Draw {
     }
 
     this.pizza(this.food.x, this.food.y)
-    this.scoreText()
-    this.ws.send(this.canvas.toDataURL())
+    this.ws.send(
+      JSON.stringify({
+        end: false,
+        score: this.score,
+        src: this.canvas.toDataURL()
+      })
+    )
   }
 
   createFood() {

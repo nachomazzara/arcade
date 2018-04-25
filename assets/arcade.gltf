@@ -1,0 +1,118 @@
+{
+    "accessors" : [
+        {
+            "bufferView" : 0, 
+            "componentType" : 5121, 
+            "count" : 162, 
+            "max" : [
+                105
+            ], 
+            "min" : [
+                0
+            ], 
+            "type" : "SCALAR"
+        }, 
+        {
+            "bufferView" : 1, 
+            "componentType" : 5126, 
+            "count" : 106, 
+            "max" : [
+                0.7620686888694763, 
+                1.605818510055542, 
+                0.8011422157287598
+            ], 
+            "min" : [
+                -0.44721686840057373, 
+                -0.9999999403953552, 
+                -1.1064127683639526
+            ], 
+            "type" : "VEC3"
+        }, 
+        {
+            "bufferView" : 2, 
+            "componentType" : 5126, 
+            "count" : 106, 
+            "max" : [
+                0.9999858140945435, 
+                1.0, 
+                0.9999377131462097
+            ], 
+            "min" : [
+                -0.9999808073043823, 
+                -1.0, 
+                -0.9999962449073792
+            ], 
+            "type" : "VEC3"
+        }
+    ], 
+    "asset" : {
+        "generator" : "Khronos Blender glTF 2.0 exporter", 
+        "version" : "2.0"
+    }, 
+    "bufferViews" : [
+        {
+            "buffer" : 0, 
+            "byteLength" : 162, 
+            "byteOffset" : 0, 
+            "target" : 34963
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 1272, 
+            "byteOffset" : 164, 
+            "target" : 34962
+        }, 
+        {
+            "buffer" : 0, 
+            "byteLength" : 1272, 
+            "byteOffset" : 1436, 
+            "target" : 34962
+        }
+    ], 
+    "buffers" : [
+        {
+            "byteLength" : 2708, 
+            "uri" : "arcade.bin"
+        }
+    ], 
+    "meshes" : [
+        {
+            "name" : "Cube.001", 
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "NORMAL" : 2, 
+                        "POSITION" : 1
+                    }, 
+                    "indices" : 0
+                }
+            ]
+        }
+    ], 
+    "nodes" : [
+        {
+            "mesh" : 0, 
+            "name" : "Cube", 
+            "rotation" : [
+                0.0, 
+                0.10080549865961075, 
+                -0.0, 
+                0.9949062466621399
+            ], 
+            "translation" : [
+                0.0, 
+                1.0, 
+                -0.0
+            ]
+        }
+    ], 
+    "scene" : 0, 
+    "scenes" : [
+        {
+            "name" : "Scene", 
+            "nodes" : [
+                0
+            ]
+        }
+    ]
+}
