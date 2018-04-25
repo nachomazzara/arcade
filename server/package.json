@@ -10,6 +10,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "printWidth": 140
+  },
   "dependencies": {
     "canvas": "^2.0.0-alpha.12",
     "nodemon": "^1.17.3",

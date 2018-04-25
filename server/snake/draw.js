@@ -1,5 +1,5 @@
 class Draw {
-  constructor (canvas, websocket) {
+  constructor(canvas, websocket) {
     this.snakeSize = 10
     this.w = 350
     this.h = 350
@@ -14,42 +14,66 @@ class Draw {
     this.drawSnake()
     this.createFood()
     this.paint = this.paint.bind(this)
-    this.gameloop = setInterval(this.paint, 500)
+    this.gameloop = setInterval(this.paint, 60)
   }
 
-  setDirection (dir) {
-    this.direction = dir
+  setDirection(dir) {
+    switch (dir) {
+      case 'left':
+        if (this.direction !== 'right') {
+          this.direction = dir
+        }
+        break
+
+      case 'right':
+        if (this.direction !== 'left') {
+          this.direction = dir
+        }
+        break
+
+      case 'up':
+        if (this.direction !== 'down') {
+          this.direction = dir
+        }
+        break
+
+      case 'down':
+        if (this.direction !== 'up') {
+          this.direction = dir
+        }
+        break
+    }
   }
 
-  bodySnake (x, y) {
+  bodySnake(x, y) {
     this.ctx.fillStyle = 'green'
     this.ctx.fillRect(x * this.snakeSize, y * this.snakeSize, this.snakeSize, this.snakeSize)
     this.ctx.strokeStyle = 'darkgreen'
     this.ctx.strokeRect(x * this.snakeSize, y * this.snakeSize, this.snakeSize, this.snakeSize)
   }
 
-  pizza (x, y) {
+  pizza(x, y) {
     this.ctx.fillStyle = 'yellow'
     this.ctx.fillRect(x * this.snakeSize, y * this.snakeSize, this.snakeSize, this.snakeSize)
     this.ctx.fillStyle = 'red'
     this.ctx.fillRect(x * this.snakeSize + 1, y * this.snakeSize + 1, this.snakeSize - 2, this.snakeSize - 2)
   }
 
-  scoreText () {
-    var score_text = "Score: " + this.score
+  scoreText() {
+    var score_text = 'Score: ' + this.score
     this.ctx.fillStyle = 'blue'
     this.ctx.fillText(score_text, 145, this.h - 5)
   }
 
-  drawSnake () {
+  drawSnake() {
     var length = 4
     this.snake = []
     for (var i = length - 1; i >= 0; i--) {
-      this.snake.push({x: i, y: 0})
+      this.snake.push({ x: i, y: 0 })
     }
   }
 
-  paint () {
+  paint() {
     this.ctx.fillStyle = 'lightgrey'
     this.ctx.fillRect(0, 0, this.w, this.h)
     this.ctx.strokeStyle = 'black'
@@ -60,26 +84,30 @@ class Draw {
     var snakeX = this.snake[0].x
     var snakeY = this.snake[0].y
 
-    if (this.direction == 'right') {
+    if (this.direction === 'right') {
       snakeX++
-    }
-    else if (this.direction == 'left') {
+    } else if (this.direction === 'left') {
       snakeX--
-    }
-    else if (this.direction == 'up') {
+    } else if (this.direction === 'up') {
       snakeY--
-    } else if (this.direction == 'down') {
+    } else if (this.direction === 'down') {
       snakeY++
     }
 
-    if (snakeX == -1 || snakeX == this.w / this.snakeSize || snakeY == -1 || snakeY == this.h / this.snakeSize || this.checkCollision(snakeX, snakeY, this.snake)) {
+    if (
+      snakeX === -1 ||
+      snakeX === this.w / this.snakeSize ||
+      snakeY === -1 ||
+      snakeY === this.h / this.snakeSize ||
+      this.checkCollision(snakeX, snakeY, this.snake)
+    ) {
       this.ctx.clearRect(0, 0, this.w, this.h)
       this.gameloop = clearInterval(this.gameloop)
       return
     }
 
-    if (snakeX == this.food.x && snakeY == this.food.y) {
-      var tail = {x: snakeX, y: snakeY} //Create a new head instead of moving the tail
+    if (snakeX === this.food.x && snakeY === this.food.y) {
+      var tail = { x: snakeX, y: snakeY } //Create a new head instead of moving the tail
       this.score++
 
       this.createFood() //Create new food
@@ -100,29 +128,32 @@ class Draw {
     this.ws.send(this.canvas.toDataURL())
   }
 
-  createFood () {
+  createFood() {
     this.food = {
-      x: Math.floor((Math.random() * 30) + 1),
-      y: Math.floor((Math.random() * 30) + 1)
+      x: Math.floor(Math.random() * 30 + 1),
+      y: Math.floor(Math.random() * 30 + 1)
     }
 
     for (var i = 0; i > this.snake.length; i++) {
       var snakeX = this.snake[i].x
       var snakeY = this.snake[i].y
 
-      if (this.food.x === snakeX && this.food.y === snakeY || this.food.y === snakeY && this.food.x === snakeX) {
-        this.food.x = Math.floor((Math.random() * 30) + 1)
-        this.food.y = Math.floor((Math.random() * 30) + 1)
+      if ((this.food.x === snakeX && this.food.y === snakeY) || (this.food.y === snakeY && this.food.x === snakeX)) {
+        this.food.x = Math.floor(Math.random() * 30 + 1)
+        this.food.y = Math.floor(Math.random() * 30 + 1)
       }
     }
   }
 
-  checkCollision (x, y, array) {
+  checkCollision(x, y, array) {
     for (var i = 0; i < array.length; i++) {
-      if (array[i].x === x && array[i].y === y)
-        return true
+      if (array[i].x === x && array[i].y === y) return true
     }
     return false
+  }
+
+  endGame() {
+    clearInterval(this.gameloop)
   }
 }
 
