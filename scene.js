@@ -66,20 +66,20 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "../../../../private/var/folders/0_/kr62m4c52cd8yt590wm2qkb00000gn/T/0.6557345066979208.WebWorker.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "../../../../../private/var/folders/v2/6rz69sr91lz2h0f9r1wcr6v80000gn/T/0.21858533433163374.WebWorker.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "../../../../private/var/folders/0_/kr62m4c52cd8yt590wm2qkb00000gn/T/0.6557345066979208.WebWorker.js":
-/*!************************************************************************************************!*\
-  !*** /private/var/folders/0_/kr62m4c52cd8yt590wm2qkb00000gn/T/0.6557345066979208.WebWorker.js ***!
-  \************************************************************************************************/
+/***/ "../../../../../private/var/folders/v2/6rz69sr91lz2h0f9r1wcr6v80000gn/T/0.21858533433163374.WebWorker.js":
+/*!*************************************************************************************************!*\
+  !*** /private/var/folders/v2/6rz69sr91lz2h0f9r1wcr6v80000gn/T/0.21858533433163374.WebWorker.js ***!
+  \*************************************************************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Users_dani_Code_arcade_node_modules_metaverse_rpc_lib_common_transports_WebWorker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/metaverse-rpc/lib/common/transports/WebWorker */ \"./node_modules/metaverse-rpc/lib/common/transports/WebWorker.js\");\n\n\nconst imported = __webpack_require__(/*! ./scene.tsx */ \"./scene.tsx\")\n\nif (imported && imported.__esModule && imported['default']) {\n  new imported['default'](Object(_Users_dani_Code_arcade_node_modules_metaverse_rpc_lib_common_transports_WebWorker__WEBPACK_IMPORTED_MODULE_0__[\"WebWorkerTransport\"])(self))\n}\n\n\n//# sourceURL=webpack:////private/var/folders/0_/kr62m4c52cd8yt590wm2qkb00000gn/T/0.6557345066979208.WebWorker.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Users_imazzara_Documents_decentraland_arcade_node_modules_metaverse_rpc_lib_common_transports_WebWorker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/metaverse-rpc/lib/common/transports/WebWorker */ \"./node_modules/metaverse-rpc/lib/common/transports/WebWorker.js\");\n\n\nconst imported = __webpack_require__(/*! ./scene.tsx */ \"./scene.tsx\")\n\nif (imported && imported.__esModule && imported['default']) {\n  new imported['default'](Object(_Users_imazzara_Documents_decentraland_arcade_node_modules_metaverse_rpc_lib_common_transports_WebWorker__WEBPACK_IMPORTED_MODULE_0__[\"WebWorkerTransport\"])(self))\n}\n\n\n//# sourceURL=webpack:////private/var/folders/v2/6rz69sr91lz2h0f9r1wcr6v80000gn/T/0.21858533433163374.WebWorker.js?");
 
 /***/ }),
 

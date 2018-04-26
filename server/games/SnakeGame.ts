@@ -1,23 +1,62 @@
-class Draw {
-  constructor(canvas, websocket) {
-    this.snakeSize = 10
-    this.w = 350
-    this.h = 350
-    this.score = 0
-    this.snake
-    this.snakeSize = 10
-    this.food
+import { config, Direction } from '../snake/config'
+import Game from './Game'
+
+export interface ISnakeGameConfig {
+  snakeSize: number
+  w: number
+  h: number
+  direction: Direction
+  updateRate: number
+}
+
+export class SnakeGame extends Game<ISnakeGameConfig> {
+  score: number = 0
+  canvas: any
+  ctx: any
+  ws: any
+  w: number
+  h: number
+  direction: Direction = config.direction
+  snakeSize: number = config.snakeSize
+  food: any
+  snake:
+    | {
+        x: number
+        y: number
+      }[]
+    | null = null
+
+  constructor(canvas: any, websocket: any) {
+    super(config)
+    this.w = config.w
+    this.h = config.h
     this.canvas = canvas
     this.ctx = canvas.getContext('2d')
     this.ws = websocket
-    this.direction = 'down'
-    this.drawSnake()
-    this.createFood()
-    this.paint = this.paint.bind(this)
-    this.gameloop = setInterval(this.paint, 100)
+    this.setListener()
+    this.initialize()
   }
 
-  setDirection(dir) {
+  initialize () {
+    this.direction = config.direction
+    this.snakeSize = config.snakeSize
+    this.score = 0
+    this.drawSnake()
+    this.createFood()
+  }
+
+  restart () {
+    this.initialize()
+    this.start()
+  }
+
+  setListener () {
+    this.ws.on('message', (message: string) => {
+       this.setDirection(message as Direction)
+    })
+  }
+
+  setDirection(dir: Direction) {
     switch (dir) {
       case 'left':
         if (this.direction !== 'right') {
@@ -45,14 +84,14 @@ class Draw {
     }
   }
 
-  bodySnake(x, y) {
+  bodySnake(x: number, y: number) {
     this.ctx.fillStyle = 'green'
     this.ctx.fillRect(x * this.snakeSize, y * this.snakeSize, this.snakeSize, this.snakeSize)
     this.ctx.strokeStyle = 'darkgreen'
     this.ctx.strokeRect(x * this.snakeSize, y * this.snakeSize, this.snakeSize, this.snakeSize)
   }
 
-  pizza(x, y) {
+  pizza(x: number, y: number) {
     this.ctx.fillStyle = 'yellow'
     this.ctx.fillRect(x * this.snakeSize, y * this.snakeSize, this.snakeSize, this.snakeSize)
     this.ctx.fillStyle = 'red'
@@ -67,7 +106,7 @@ class Draw {
     }
   }
 
-  paint() {
+  update() {
     this.ctx.fillStyle = 'lightgrey'
     this.ctx.fillRect(0, 0, this.w, this.h)
     this.ctx.strokeStyle = 'black'
@@ -75,8 +114,8 @@ class Draw {
 
     // btn.setAttribute('disabled', true)
 
-    var snakeX = this.snake[0].x
-    var snakeY = this.snake[0].y
+    var snakeX = this.snake![0].x
+    var snakeY = this.snake![0].y
 
     if (this.direction === 'right') {
       snakeX++
@@ -93,10 +132,10 @@ class Draw {
       snakeX === this.w / this.snakeSize ||
       snakeY === -1 ||
       snakeY === this.h / this.snakeSize ||
-      this.checkCollision(snakeX, snakeY, this.snake)
+      this.checkCollision(snakeX, snakeY, this.snake!)
     ) {
       this.ctx.clearRect(0, 0, this.w, this.h)
-      this.gameloop = clearInterval(this.gameloop)
+      this.stop()
       this.ws.send(
         JSON.stringify({
           end: true
@@ -104,22 +143,22 @@ class Draw {
       )
       return
     }
-
+    let tail
     if (snakeX === this.food.x && snakeY === this.food.y) {
-      var tail = { x: snakeX, y: snakeY } //Create a new head instead of moving the tail
+      tail = { x: snakeX, y: snakeY } //Create a new head instead of moving the tail
       this.score++
 
       this.createFood() //Create new food
     } else {
-      var tail = this.snake.pop() //pops out the last cell
-      tail.x = snakeX
-      tail.y = snakeY
+      tail = this.snake!.pop() //pops out the last cell
+      tail!.x = snakeX
+      tail!.y = snakeY
     }
     //The snake can now eat the food.
-    this.snake.unshift(tail) //puts back the tail as the first cell
+    this.snake!.unshift(tail!) //puts back the tail as the first cell
 
-    for (var i = 0; i < this.snake.length; i++) {
-      this.bodySnake(this.snake[i].x, this.snake[i].y)
+    for (let i = 0; i < this.snake!.length; i++) {
+      this.bodySnake(this.snake![i].x, this.snake![i].y)
     }
 
     this.pizza(this.food.x, this.food.y)
@@ -138,9 +177,9 @@ class Draw {
       y: Math.floor(Math.random() * 30 + 1)
     }
 
-    for (var i = 0; i > this.snake.length; i++) {
-      var snakeX = this.snake[i].x
-      var snakeY = this.snake[i].y
+    for (var i = 0; i > this.snake!.length; i++) {
+      const snakeX = this.snake![i].x
+      const snakeY = this.snake![i].y
 
       if ((this.food.x === snakeX && this.food.y === snakeY) || (this.food.y === snakeY && this.food.x === snakeX)) {
         this.food.x = Math.floor(Math.random() * 30 + 1)
@@ -149,16 +188,10 @@ class Draw {
     }
   }
 
-  checkCollision(x, y, array) {
-    for (var i = 0; i < array.length; i++) {
+  checkCollision(x: number, y: number, array: { x: number, y: number }[]) {
+    for (let i = 0; i < array.length; i++) {
       if (array[i].x === x && array[i].y === y) return true
     }
     return false
   }
-
-  endGame() {
-    clearInterval(this.gameloop)
-  }
 }
-
-module.exports = Draw
