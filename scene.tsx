@@ -9,11 +9,10 @@ export default class RollerCoaster extends ScriptableScene<any> {
   }
 
   sceneDidMount() {
-    this.connection = new WebSocket("ws://localhost:8989", ["soap", "xmpp"]);
+    this.connection = new WebSocket("ws://206.189.189.149/arcade", ["soap", "xmpp"]);
     this.connection!.addEventListener("message", (e: MessageEvent) => {
       const { end, score, src } = JSON.parse(e.data);
       if (!end) {
-        console.log(this.state.switched);
         const key = this.state.switched ? "src1" : "src2";
         this.setState({
           [key]: src,
