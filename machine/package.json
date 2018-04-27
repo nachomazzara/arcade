@@ -1,0 +1,18 @@
+{
+  "name": "dcl-project",
+  "version": "1.0.0",
+  "description": "Arcade game",
+  "scripts": {
+    "build": "metaverse-compiler build.json",
+    "watch": "metaverse-compiler build.json --watch"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "metaverse-api": "^3.1.2-rc.1",
+    "typescript": "^2.7.2"
+  },
+  "dependencies": {
+    "ws": "^5.1.1"
+  }
+}
