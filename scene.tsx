@@ -1,7 +1,7 @@
 import { createElement, ScriptableScene } from "metaverse-api";
 
 export default class RollerCoaster extends ScriptableScene<any> {
-  state = { score: 0, src1: "", src2: "", switched: true };
+  state = { score: 0, src1: "", src2: "", switched: true, intervals: 0, key: 'src1' };
   connection: WebSocket | null = null;
 
   sceneWillUnmount() {
@@ -9,19 +9,23 @@ export default class RollerCoaster extends ScriptableScene<any> {
   }
 
   sceneDidMount() {
-    this.connection = new WebSocket("ws://206.189.189.149/arcade", ["soap", "xmpp"]);
+    let isReady = false
+    this.connection = new WebSocket("ws://localhost:8081", ["soap", "xmpp"]);
     this.connection!.addEventListener("message", (e: MessageEvent) => {
-      const { end, score, src } = JSON.parse(e.data);
+      const { end, score, src, updateRate } = JSON.parse(e.data);
       if (!end) {
-        const key = this.state.switched ? "src1" : "src2";
+        //const key = this.state.switched ? "src1" : "src2";
+        console.log(this.state.key)
         this.setState({
-          [key]: src,
+          [this.state.key]: src,
+          key: this.state.key === 'src1' ? 'src2' : 'src1',
           score
         });
+        if (isReady) setTimeout(() =>  this.setState({ switched: !this.state.switched }), updateRate)
+        isReady = true
       }
-      this.setState({ switched: !this.state.switched });
-    });
-
+    })
+    
     this.eventSubscriber.on("btn_left_click", () => {
       this.connection!.send("left");
     });
@@ -60,13 +64,13 @@ export default class RollerCoaster extends ScriptableScene<any> {
             h-align="center"
           />
           <plane
-            key={"1"}
+            key={1}
             position={{ x: 0, y: 1, z: switched ? -0.1 : -0.3 }}
             material={{ src: src1, color: "white" }}
             rotation={{ x: 0, y: 10, z: 0 }}
           />
           <plane
-            key={"2"}
+            key={2}
             position={{ x: 0, y: 1, z: !switched ? -0.1 : -0.3 }}
             material={{ src: src2, color: "white" }}
             rotation={{ x: 0, y: 10, z: 0 }}

@@ -19,6 +19,7 @@ export class SnakeGame extends Game<ISnakeGameConfig> {
   direction: Direction = config.direction
   snakeSize: number = config.snakeSize
   food: any
+  skipRate: number = 6
   snake:
     | {
         x: number
@@ -107,7 +108,12 @@ export class SnakeGame extends Game<ISnakeGameConfig> {
   }
 
   update() {
-    this.ctx.fillStyle = 'lightgrey'
+    if (this.skipRate < 1) {
+      this.skipRate++
+      return
+    }
+    this.skipRate = 0
+    this.ctx.fillStyle = 'black'
     this.ctx.fillRect(0, 0, this.w, this.h)
     this.ctx.strokeStyle = 'black'
     this.ctx.strokeRect(0, 0, this.w, this.h)
@@ -166,7 +172,8 @@ export class SnakeGame extends Game<ISnakeGameConfig> {
       JSON.stringify({
         end: false,
         score: this.score,
-        src: this.canvas.toDataURL()
+        src: this.canvas.toDataURL(),
+        updateRate: this.config.updateRate
       })
     )
   }

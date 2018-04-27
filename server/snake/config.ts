@@ -10,5 +10,5 @@ export const config = {
   w: 350,
   h: 350,
   direction: Direction.DOWN,
-  updateRate: 100,
+  updateRate: 40,
 }
