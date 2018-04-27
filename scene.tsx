@@ -10,7 +10,7 @@ export default class RollerCoaster extends ScriptableScene<any> {
 
   sceneDidMount() {
     let isReady = false
-    this.connection = new WebSocket("ws://localhost:8081", ["soap", "xmpp"]);
+    this.connection = new WebSocket("wss://metarcade.club", ["soap", "xmpp"]);
     this.connection!.addEventListener("message", (e: MessageEvent) => {
       const { end, score, src, updateRate } = JSON.parse(e.data);
       if (!end) {
