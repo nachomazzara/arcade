@@ -1,12 +1,15 @@
+import { EventEmitter } from 'events'
+
 export interface IGameConfig {
   updateRate: number
 }
 
-abstract class Game<T extends IGameConfig> {
+abstract class Game<T extends IGameConfig> extends EventEmitter {
   config: T
   gameloop: NodeJS.Timer | null = null
 
   constructor(config: T) {
+    super()
     this.config = config
     this.update = this.update.bind(this)
     this.start()
@@ -20,6 +23,7 @@ abstract class Game<T extends IGameConfig> {
     clearInterval(this.gameloop!)
   }
 
+  abstract onMessage(msg: any): void
   abstract update(): void
   abstract restart(): void
 }

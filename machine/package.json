@@ -9,10 +9,12 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@types/uuid": "^3.4.3",
     "metaverse-api": "^3.1.2-rc.1",
     "typescript": "^2.7.2"
   },
   "dependencies": {
-    "ws": "^5.1.1"
+    "ws": "^5.1.1",
+    "uuid": "^3.2.1"
   }
 }

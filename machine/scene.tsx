@@ -3,6 +3,7 @@ import {
   ScriptableScene,
   Vector3Component
 } from "metaverse-api";
+import * as uuid from "uuid";
 
 export const Controls = (props: { position: Vector3Component }) => {
   return (
@@ -54,7 +55,7 @@ export const Controls = (props: { position: Vector3Component }) => {
   );
 };
 
-export default class RollerCoaster extends ScriptableScene<any> {
+export default class Machine extends ScriptableScene<any> {
   state = {
     score: 0,
     src1: "",
@@ -63,16 +64,35 @@ export default class RollerCoaster extends ScriptableScene<any> {
     switched: true
   };
   connection: WebSocket | null = null;
+  machineId: string = "NO_MACHINE";
+  id: string = uuid.v4();
+
+  sendMsg(msg: any) {
+    this.connection!.send(JSON.stringify(msg));
+  }
 
   sceneWillUnmount() {
     this.connection!.close();
   }
 
-  sceneDidMount() {
+  async sceneDidMount() {
     let isReady = false;
-    this.connection = new WebSocket("wss://metarcade.club", ["soap", "xmpp"]);
+    const attrs = await this.entityController!.getOwnAttributes();
+    // wss://metarcade.club
+    this.connection = new WebSocket("ws://localhost:8080", ["soap", "xmpp"]);
+    this.machineId = btoa(JSON.stringify(attrs.position));
+    this.connection.addEventListener("open", () => {
+      this.sendMsg({
+        type: "spectator_id",
+        payload: {
+          spectatorId: this.id
+        }
+      });
+    });
+
     this.connection!.addEventListener("message", (e: MessageEvent) => {
-      const { end, score, src, updateRate } = JSON.parse(e.data);
+      const { end, score, src, updateRate, machineId } = JSON.parse(e.data);
+      if (machineId !== this.machineId) return;
       if (!end) {
         this.setState({
           [this.state.lastUpdated]: src,
@@ -88,25 +108,59 @@ export default class RollerCoaster extends ScriptableScene<any> {
       }
     });
 
-    this.eventSubscriber.on("btn_left_click", () => {
-      this.connection!.send("left");
+    this.eventSubscriber.on("btn_left_click", async () => {
+      this.sendMsg({
+        type: "game_input",
+        payload: {
+          input: "left",
+          machineId: this.machineId
+        }
+      });
       this.setState({ constrolsSwitched: true });
     });
-    this.eventSubscriber.on("btn_up_click", () => {
-      this.connection!.send("up");
-      this.setState({ constrolsSwitched: false });
-    });
-    this.eventSubscriber.on("btn_right_click", () => {
-      this.connection!.send("right");
-      this.setState({ constrolsSwitched: true });
-    });
-    this.eventSubscriber.on("btn_down_click", () => {
-      this.connection!.send("down");
+
+    this.eventSubscriber.on("btn_up_click", async () => {
+      this.sendMsg({
+        type: "game_input",
+        payload: {
+          input: "up",
+          machineId: this.machineId
+        }
+      });
       this.setState({ constrolsSwitched: false });
     });
 
-    this.eventSubscriber.on("btn_retry_click", () => {
-      this.connection!.send("retry");
+    this.eventSubscriber.on("btn_right_click", async () => {
+      this.sendMsg({
+        type: "game_input",
+        payload: {
+          input: "right",
+          machineId: this.machineId
+        }
+      });
+      this.setState({ constrolsSwitched: true });
+    });
+
+    this.eventSubscriber.on("btn_down_click", async () => {
+      this.sendMsg({
+        type: "game_input",
+        payload: {
+          input: "down",
+          machineId: this.machineId
+        }
+      });
+      this.setState({ constrolsSwitched: false });
+    });
+
+    this.eventSubscriber.on("btn_retry_click", async () => {
+      this.sendMsg({
+        type: "start",
+        payload: {
+          machineId: this.machineId,
+          game: "snake_game",
+          playerId: this.id
+        }
+      });
     });
   }
 

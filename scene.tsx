@@ -7,6 +7,15 @@ export default class Arcade extends ScriptableScene<any> {
         <system src="../machine/scene.js" position={{ x: -1, y: 0, z: 0 }} />
         <system src="../machine/scene.js" />
         <system src="../machine/scene.js" position={{ x: 1, y: 0, z: 0 }} />
+        {/* <system
+          src="https://raw.githubusercontent.com/nachomazzara/arcade/master/machine/scene.js"
+          position={{ x: -1, y: 0, z: 0 }}
+        />
+        <system src="https://raw.githubusercontent.com/nachomazzara/arcade/master/machine/scene.js" />
+        <system
+          src="https://raw.githubusercontent.com/nachomazzara/arcade/master/machine/scene.js"
+          position={{ x: 1, y: 0, z: 0 }}
+        /> */}
       </scene>
     );
   }

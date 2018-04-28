@@ -1,5 +1,6 @@
 import { config, Direction } from '../snake/config'
 import Game from './Game'
+const { createCanvas } = require('canvas')
 
 export interface ISnakeGameConfig {
   snakeSize: number
@@ -13,7 +14,6 @@ export class SnakeGame extends Game<ISnakeGameConfig> {
   score: number = 0
   canvas: any
   ctx: any
-  ws: any
   w: number
   h: number
   direction: Direction = config.direction
@@ -27,18 +27,16 @@ export class SnakeGame extends Game<ISnakeGameConfig> {
       }[]
     | null = null
 
-  constructor(canvas: any, websocket: any) {
+  constructor() {
     super(config)
     this.w = config.w
     this.h = config.h
-    this.canvas = canvas
-    this.ctx = canvas.getContext('2d')
-    this.ws = websocket
-    this.setListener()
+    this.canvas = createCanvas(350, 350)
+    this.ctx = this.canvas.getContext('2d')
     this.initialize()
   }
 
-  initialize () {
+  initialize() {
     this.direction = config.direction
     this.snakeSize = config.snakeSize
     this.score = 0
@@ -46,15 +44,13 @@ export class SnakeGame extends Game<ISnakeGameConfig> {
     this.createFood()
   }
 
-  restart () {
+  restart() {
     this.initialize()
     this.start()
   }
 
-  setListener () {
-    this.ws.on('message', (message: string) => {
-       this.setDirection(message as Direction)
-    })
+  onMessage(msg: any) {
+    this.setDirection(msg.payload.input as Direction)
   }
 
   setDirection(dir: Direction) {
@@ -142,11 +138,7 @@ export class SnakeGame extends Game<ISnakeGameConfig> {
     ) {
       this.ctx.clearRect(0, 0, this.w, this.h)
       this.stop()
-      this.ws.send(
-        JSON.stringify({
-          end: true
-        })
-      )
+      this.emit('game_end')
       return
     }
     let tail
@@ -168,14 +160,11 @@ export class SnakeGame extends Game<ISnakeGameConfig> {
     }
 
     this.pizza(this.food.x, this.food.y)
-    this.ws.send(
-      JSON.stringify({
-        end: false,
-        score: this.score,
-        src: this.canvas.toDataURL(),
-        updateRate: this.config.updateRate
-      })
-    )
+    this.emit('game_update', {
+      score: this.score,
+      src: this.canvas.toDataURL(),
+      updateRate: this.config.updateRate
+    })
   }
 
   createFood() {
@@ -195,7 +184,7 @@ export class SnakeGame extends Game<ISnakeGameConfig> {
     }
   }
 
-  checkCollision(x: number, y: number, array: { x: number, y: number }[]) {
+  checkCollision(x: number, y: number, array: { x: number; y: number }[]) {
     for (let i = 0; i < array.length; i++) {
       if (array[i].x === x && array[i].y === y) return true
     }
