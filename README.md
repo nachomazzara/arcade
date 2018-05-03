@@ -1,2 +1,2 @@
 # Arcade
-Arcade project for Decentraland
+Arcade project for Decentraland, the best
